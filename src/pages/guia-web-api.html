@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Guia ASP.NET Web API</title>
+    <link rel="stylesheet" href="../styles/dev-guias.css" />
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.7/dist/iconify-icon.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>    
+    <header id="inicio">
+        <div class="titulo-inicio">
+            <h2>Guías ASP.NET Core</h2>
+            <img  class="logo-main-header" src="../images/ovni-dino.png"/> 
+        </div>
+        
+        <div class="header-img-container">              
+            <img class="logo-tech" src="../images/asp-net-core-logo.png">
+            <img class="logo-tech" src="../images/sql-server.png">
+<!--             <img class="logo-tech" src="../images/jwt-logo.png"> -->
+        </div>
+    </header>  
+    <nav id="navbar">              
+        <header> 
+            <div class="nav-header-img">
+                <!-- <img class="logo-main" src="./images/asp-net-core-square.png"> -->
+                <a class="logo-home" href="./dev-docs.html"><iconify-icon class="icon-home" icon="eva:home-fill"></iconify-icon><img  class="logo-main" src="../images/dino-face.png"/></a>
+            </div>
+            <h1>ASP.NET Core Web API</h1>   
+            <sub>Enfoque DB First</sub>
+        </header>
+        <ul>
+            <li><a class="nav-link" href="#inicio">Introduccion</a></li>
+            <li><a class="nav-link" href="#Requisitos_previos">Requisitos previos</a></li>
+            <li><a class="nav-link" href="#Conocimientos_requeridos">Qué necesito saber</a></li>
+            <li><a class="nav-link" href="#aspnet_core">ASP.NET Core</a></li>
+            <li><a class="nav-link" href="#pasos_a_seguir">Pasos a seguir</a></li>            
+            <li><a class="nav-link" href="#crear_db">Crear la base de datos</a></li>
+            <li><a class="nav-link" href="#crear_proyecto">Crear el proyecto</a></li>
+            <li><a class="nav-link" href="#instalar_paquetes">Insalar Paquetes NuGet</a></li>
+            <li><a class="nav-link" href="#conectar_con_db">Importar entidades de la DB</a></li>
+            <!-- <li>
+                <a class="nav-link" href="#opciones_scaffold">Opciones de Scaffolding</a>                        
+            </li> -->
+            <li><a class="nav-link" href="#registrar_dbcontext">Registrar DbContext</a></li>
+            <li><a class="nav-link" href="#agregar_controladores">Agregar controladores</a></li>
+            <li><a class="nav-link" href="#dto_y_automapper">DTO y AutoMapper</a></li>
+            <li><a class="nav-link" href="#agregar_patron_repository">Emplear patrón de repositorio</a></li>
+            <li><a class="nav-link" href="#actualizar_db">Actualizar base de datos</a></li>
+            <li><a class="nav-link" href="#probar">Probar la API</a></li>
+            <li><a class="nav-link" href="#posibles-errores-db">Errores comunes en el desarrollo</a></li>            
+        </ul>
+    </nav>
+    <main id="main-doc">        
+        <section class="main-section" id="Introduccion">
+            <header>Introducción</header>
+            <article>                
+                <p>
+                    Esta guía tiene la finalidad brindar las herramientas básicas para comprender la estructura y los conceptos esenciales para la creación de una Web API en C# con ASP.Net Core 8, con enfoque DB First.
+                </p>
+                <p>
+                    Se verá paso a paso el armado de la estructura general de la API y se verán algunos ejemplos de operaciones CRUD.                    
+                </p>
+                <p class="notas-light">
+                    <iconify-icon icon="pajamas:status-alert"></iconify-icon> No es un tutorial para desarrollar un proyecto completo.
+                </p>
+                
+                <h2>Conceptos involucrados:</h2> 
+                
+                <ul>
+                    <li>
+                        Entity Framework Core para administrar la conexión con la base de datos.
+                    </li>
+                    <li>
+                        Arquitectura basada en el Patrón de Repositorio. 
+                    </li>
+                    <li>
+                        Enfoque DB First, aplicando Ingeniería inversa para generar las clases de entidades a partir de los modelos de una base de datos ya existente.
+                    </li>
+                </ul>
+            </article>
+        </section>
+        <section class="main-section" id="Requisitos_previos">
+            <header>Requisitos previos</header>
+            <article>
+                <p>Para desarrollar el proyecto propuesto en esta guía, es necesario contar con:</p>
+
+                <ul>
+                    <li>
+                        Visual Studio 2022 configurado para poder crear aplicaciones ASP.NET con C#.
+                    </li>
+                    <li>
+                        SQL Server Management Studio o Azure Data Studio.
+                    </li>
+                    <li>
+                        Postman (No es obligatorio).
+                    </li>                    
+                </ul>
+            </article>
+        </section>
+        <section class="main-section" id="Conocimientos_requeridos">
+            <header>Qué necesito saber</header>
+            <article>
+                <p>En esta guía se asume que contás con los siguientes conocimientos:</p>
+                <ul>
+                    <li>
+                        Lógica de programación.
+                    </li>
+                    <li>
+                        Programación Orientada a Objetos.
+                    </li>
+                    <li>
+                        Nivel intermedio de C#, incluyendo manejo de LINQ y programación asíncrona.
+                    </li>
+                    <li>
+                        Nivel básico de ASP.NET.
+                    </li>
+                    <li>
+                        Nivel básico de SQL Server / T-SQL.
+                    </li>
+                    <li>
+                        Nociones de arquitectura MVC (desestimando las vistas).
+                    </li>
+                    <li>
+                        Nociones básicas del protocolo HTTP.
+                    </li>    
+                    <li>
+                        Desarrollo de CRUD básico con ASP.NET.
+                    </li>                
+                </ul>
+            </article>
+        </section>
+        <section class="main-section" id="aspnet_core">
+            <header>ASP.NET Core</header>
+            <article>
+                <p>
+                    ASP.NET Core es un framework Multi-Plataforma de código abierto. Se trata de un nuevo diseño de ASP.NET 4.x con algunos cambios en la arquitectura, dando como resultado un framework más sencillo y permitiendo el desarrollo de sistemas con mejor escalabilidad y rendimiento.
+                </p>
+                <p>
+                    Para más detalles sobre ASP.NET Core, visitar la <a href="https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-8.0">Documentación de Microsoft</a>.
+                </p>                
+            </article>
+        </section>
+        <section class="main-section" id="pasos_a_seguir">
+            <header>Pasos a seguir</header>
+            <article>
+                <ul>
+                    <li>
+                        Crear la base de datos.
+                    </li>
+                    <li>
+                        Crear el proyecto.
+                    </li>
+                    <li>
+                        Instalar paquetes NuGet.
+                    </li>
+                    <li>
+                        Importar la base de datos.
+                    </li>
+                    <li>
+                        Registrar el DbContext.
+                    </li>
+                    <li>
+                        Crear controladores.
+                    </li>
+                    <li>
+                        Agregar DTOs y AutoMapper
+                    </li>
+                    <li>
+                        Emplear patrón de repositorio.
+                    </li>
+                    <li>
+                        Actualizar base de datos.
+                    </li>                    
+                </ul>               
+            </article>
+        </section>
+        <section class="main-section" id="crear_db">
+            <header>Crear la base de datos</header>
+            <p>
+                En esta guía vamos a trabarar con enfoque DB First. Por lo que es necesario que contemos previamente con una base de datos SQL Server ya existente.
+            </p>
+            <p>
+                Para crear la base de datos, podés copiar y ejecutar el siguiente código T-SQL o bien crear tu propia base de datos con la temática que desees.                
+            </p>
+            <p>
+                El proyecto de ejemplo es una API que permite realizar CRUD básico para administrar una librería ficticia, llamada <i>El Portal</i>.
+            </p>
+            <h2>I - Creación de la DB:</h2>            
+            <code>
+                DATABASE elportal;
+            </code>
+            <h2>II - Creación de las tablas de la DB:</h2>
+            <code>
+                USE elportal;
+
+
+                CREATE TABLE Libros (
+                    ISBN VARCHAR(20) PRIMARY KEY,
+                    Titulo VARCHAR(255) NOT NULL,
+                    Autor VARCHAR(100),
+                    Genero VARCHAR(50),
+                    Precio DECIMAL(10, 2),
+                    Stock INT
+                );
+    
+    
+                CREATE TABLE Clientes (
+                    ClienteID INT IDENTITY(1,1) PRIMARY KEY,
+                    Nombre VARCHAR(100) NOT NULL,
+                    Email VARCHAR(255),
+                    Telefono VARCHAR(20),
+                    FechaAlta DATETIME
+                );
+    
+    
+                CREATE TABLE Ventas (
+                    VentaID INT IDENTITY(1,1) PRIMARY KEY,
+                    FechaVenta DATETIME NOT NULL,
+                    ClienteID INT,
+                    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
+                );
+    
+    
+                CREATE TABLE DetalleVenta (
+                    DetalleVentaID INT IDENTITY(1,1) PRIMARY KEY,
+                    VentaID INT,
+                    ISBN VARCHAR(20),
+                    Cantidad INT,
+                    PrecioUnitario DECIMAL(10, 2),
+                    FOREIGN KEY (VentaID) REFERENCES Ventas(VentaID),
+                    FOREIGN KEY (ISBN) REFERENCES Libros(ISBN)
+                );
+            </code>
+            <h2>III - Inserción de registros:</h2>
+            <code>
+                USE elportal;
+
+                INSERT INTO Libros (ISBN, Titulo, Autor, Genero, Precio, Stock)
+                VALUES
+                    ('978-0345339706', 'El Señor de los Anillos: La Comunidad del Anillo', 'J.R.R. Tolkien', 'Fantasía', 12.99, 100),
+                    ('978-0451167712', 'El Resplandor', 'Stephen King', 'Terror', 9.99, 50),
+                    ('978-0307475739', 'El Principito', 'Antoine de Saint-Exupéry', 'Infantil', 7.99, 120),
+                    ('978-0743273565', 'Harry Potter y la Piedra Filosofal', 'J.K. Rowling', 'Fantasía', 10.99, 90),
+                    ('978-0345371980', 'Last Chance to See', 'Douglas Adams', 'Ciencia Ficción', 11.99, 15),
+                    ('978-0345391804', 'Guía del Autoestopista Galáctico', 'Douglas Adams', 'Ciencia Ficción', 9.99, 40),
+                    ('978-0345418913', 'El Restaurante del Fin del Mundo', 'Douglas Adams', 'Ciencia Ficción', 8.99, 35),
+                    ('978-0140327557', 'Charlie y la Fábrica de Chocolate', 'Roald Dahl', 'Infantil', 8.99, 25),
+                    ('978-0142410394', 'Matilda', 'Roald Dahl', 'Infantil', 7.99, 30),
+                    ('978-0141301068', 'James y el Melocotón Gigante', 'Roald Dahl', 'Infantil', 6.99, 20),
+                    ('978-4088732897', 'Death Note', 'Tsugumi Ohba', 'Manga', 9.99, 25),
+                    ('978-1569319000', 'Detective Conan', 'Gosho Aoyama', 'Manga', 8.99, 30),
+                    ('978-1632364616', 'Akira', 'Katsuhiro Otomo', 'Manga', 12.99, 20),
+                    ('978-1935429005', 'Ghost in the Shell', 'Masamune Shirow', 'Manga', 11.99, 15);
+
+
+                INSERT INTO Clientes (Nombre, Email, Telefono)
+                VALUES
+                    ('Juan Pérez', 'juan.perez@email.com', '123-456-7890'),
+                    ('Ana García', 'ana.garcia@email.com', '987-654-3210'),
+                    ('Carlos López', 'carlos.lopez@email.com', '555-555-5555'),
+                    ('Laura Rodríguez', 'laura.rodriguez@email.com', '111-222-3333'),
+                    ('María Fernández', 'maria.fernandez@email.com', '444-333-2222');                
+            </code>   
+        </section>
+        <section class="main-section" id="crear_proyecto">
+            <header>Crear el proyecto</header>
+            <article>
+                <h3>Elección de la plantilla para desarrollar una API Web con ASP.NET Core 8:</h3>
+                <ol>
+                    <li>
+                        Abrir Visual Studio 2022.
+                    </li>
+                    <li>
+                        Ir a "Create a new project".
+                    </li>
+                    <li>
+                        Elegir la plantilla  "ASP.NET Core Web API". <iconify-icon icon="icon-park-solid:next"></iconify-icon> Click en "Next". 
+                    </li>
+                    <li>
+                        Asignar un nombre al proyecto y elegir la ubicación del mismo. <iconify-icon icon="icon-park-solid:next"></iconify-icon> Click en "Next".
+                        <p>En este caso elegimos <i>LibreriaElPortal</i> para la solución y <i>LibreriaElPortal.API</i> para el proyecto.</p> 
+                    </li>
+                    <li>
+                        Elegir la versión del Framework de preferencia. En este caso elegiremos .NET 8.0 (Long Term Support). <iconify-icon icon="el:ok-sign"></iconify-icon> Click en "Create".
+                    </li>
+                </ol>
+               
+                <p>
+                    Se creará un proyecto con el siguiente contenido:
+                </p>
+                <p>
+                    <img class="project-cap" src="../images/created-proj.png"/>
+                </p>
+            </article>
+        </section>
+        <section class="main-section" id="instalar_paquetes">
+            <header>Instalar paquetes NuGet</header>
+            <article>
+                <p>
+                    Para instalar paquetes NuGet, hacer click derecho sobre el proyecto y seleccionar la opción "Manage NuGet Packages".
+                </p>
+                <p>
+                    Una vez en el administrador de paquetes NuGet, instalar los siguientes paquetes: 
+                </p>
+                <ul>
+                    <li>
+                        Microsoft.Entityframeworkcore
+                    </li>
+                    <li>
+                        Microsoft.Entityframeworkcore.tools
+                    </li>
+                    <li>
+                        Microsoft.Entityframeworkcore.SqlServer
+                    </li>
+                    <li>
+                        Microsoft.Entityframeworkcore.Design
+                    </li>
+                </ul>
+            </article>
+        </section>
+        <section class="main-section" id="conectar_con_db">
+            <header>Importar entidades de la base de datos</header>
+            <article>                
+                <p>
+                    1. Abrir la consola de administracion de paquetes.
+                </p>
+                <p>
+                    2. Posicionarse en el directorio del proyecto.
+                </p>
+                <code><span class="code-main-keyword">cd</span> LibreriaElPortal.API</code>
+                <p>
+                    3. Ejecutar el comando de Scaffolding para crear automáticamente las clases de entidades en Models y el archivo de contexto, a partir de la base de datos.
+                </p>
+                <code><span class="code-main-keyword">Scaffold-DbContext</span> "Server=.\SQLExpress;Database=elportal;Trusted_Connection=true;TrustServerCertificate=true;" Microsoft.EntityFrameworkCore.SqlServer <span class="code-parametro">-OutputDir</span> Models</code>
+                <p>Con este comando se genera un directorio con el nombre <b>Models</b> con el siguiente contenido:</p>
+                <ul>
+                    <li>Una clase que hereda de DbContext, donde se definen los DbSets, las características de las entidades y la relación entre ellas.</li>
+                    <li>Una clase de entidad para cada tabla existente en la base de datos.</li>
+                </ul>
+                <p>
+                    <img class="project-cap" src="../images/model-dir.png" alt="">
+                </p>
+                <div class="notas">
+                    <h3>NOTAS:</h3>
+                    <ul>
+                        <li>
+                            Para poder ejecutar este comando sin problemas en ASP.NET Core 8, es necesario asegurarse de que el atributo <<b>InvariantGlobalization</b>> esté seteado en <b>false</b> en la configuración del proyecto.
+                        </li>
+                        <li>
+                            La cadena de conexión del ejemplo es válida para una conexión con autenticación de Windows. Para acceder con usuario y contraseña, quitar el atributo <b>Trusted_Connection=true;</b> y agregar usuario y contraseña a la cadena de conexión.
+                        </li>
+                        <li>El comando del ejemplo <b>trae la totalidad de las tablas existentes en la dase de datos</b>. A continuación se describen algunas opciones para personalizar el proceso de Scaffolding</li>
+                    </ul> 
+                </div>
+                
+                <h2 id="opciones_scaffold">Más opciones de Scaffolding:</h2>
+                <ul>
+                    <li>
+                        <h3>Aregar seguridad a la cadena de conexión:</h3> 
+                        <p>
+                            Para no exponer la cadena de conexión en el archivo DbContext, se recomienda tener esta información en AppSettings y luego correr el comando de scaffolding apuntando a la cadena de conexión configurada en este archivo.
+                        </p>
+                        <p>AppSettings.json:</p>
+                        <code>
+                            {
+                                &nbsp;&nbsp;"ConnectionStrings": {
+                                &nbsp;&nbsp;&nbsp;&nbsp;"DefaultConnection": "Server=.\\SQLExpress;Database=elportal;Trusted_Connection=true;TrustServerCertificate=true;"
+                                &nbsp;&nbsp;}
+                            }                              
+                        </code>
+                        <p>Comando por consola PM:</p>
+                        <code>
+                            <span class="code-main-keyword">Scaffold-DbContext</span> <span class="code-highlight">"Name=DefaultConnection"</span> Microsoft.EntityFrameworkCore.SqlServer <span class="code-parametro">-OutputDir</span> Models                          
+                        </code>
+                    </li>
+                    <li>
+                        <h3>Importar un subconjunto de tablas:</h3> 
+                        <p>
+                            Para poder realizar el proceso de ingeniería inversa, trayendo únicamente las tablas de interés para la aplicación, se puede modificar el script de scaffolding, aclarando cuáles son estas tablas.
+                        </p>                        
+                        <p>Compando por consola PM:</p>
+                        <code>
+                            <span class="code-main-keyword">Scaffold-DbContext</span> "Name=DefaultConnection" Microsoft.EntityFrameworkCore.SqlServer <span class="code-highlight">-t Clientes,Libros,Ventas</span> <span class="code-parametro">-o</span> Models                          
+                        </code>
+                            <div class="notas">
+                            <p>
+                                IMPORTANTE: Cuando se quiera incorporar nuevas tablas a nuestro proyecto con el comando de actualización del contexto (se verá más adelante en esta guía), es necesario incluir también las tablas anteriores. De lo contrario se perderá el vínculo con estas entidades.
+                            </p>
+                        </div>
+                    </li>
+                </li>
+                <li>
+                    <h3>Evitar el renombramiento de tablas y campos al crear las clases de entidad:</h3> 
+                    <p>
+                        Entity Framework Core (EF Core), va a intentar pluralizar los nombres de tablas al crear los DBSets y también va a intentar singularizar estos nombres al crear las clases de entidad. Lo cual no siempre nos va a favorecer a la hora de interpretar y asociar las clases con su significado y con la nomenclatura establecida en la base de datos.
+                    </p>                        
+                    <p>Esto se soluciona agregando la opción  <b>-NoPluralize</b> al correr el comando <b>Scaffold-DbContext</b></p>
+                    <p>
+                        A su vez, EF Core, por defecto, está configurado para convertir los nombres, tanto de las tablas como de los campos, a camel case.
+                    </p>                        
+                    <p>Esto se soluciona agregando la opción  <b>-UseDatabaseNames</b> al correr el comando <b>Scaffold-DbContext</b></p>
+                    <p>Aplicando estos dos conceptos, el comando de creación de DbContext, nos quedaría así:</p>
+                    <code>
+                        <span class="code-main-keyword">Scaffold-DbContext</span> "Name=DefaultConnection" Microsoft.EntityFrameworkCore.SqlServer <span class="code-parametro">-t</span> Clientes,Libros,Ventas <span class="code-parametro">-o</span> Models <span class="code-highlight">-UseDatabaseNames -NoPluralize</span>                         
+                    </code>
+                    <p>IMPORTANTE: Cuando se quiera incorporar nuevas tablas a nuestro proyecto con el comando de actualización del contexto (se verá más adelante en esta guía), es necesario incluir también las tablas anteriores. De lo contrario se perderá el vínculo con estas entidades.</p>
+                </li>
+                </ul>
+                <p>Para más información sobre los parámetros para Scaffold-DbContext, revisar la <a href="https://learn.microsoft.com/en-us/ef/core/cli/powershell#scaffold-dbcontext">documentación oficial de Microsoft</a>.</p>
+            </article>
+        </section>
+        <section class="main-section" id="registrar_dbcontext">
+            <header>Registrar DbContext</header>
+            <article>                
+                <p>
+                    Para poder acceder a la base de datos a través de una instancia del DbContext, es necesario registrar este servicio. Esto se logra agregándolo al contenedor de servicios, desde el archivo <b>Program.cs</b>, mediante inyección de dependencias.
+                </p>
+                <p>
+                    El registro del DbContext tiene que estar entre las líneas "<i>var builder = WebApplication.CreateBuilder(args);</i>" y "<i>var app = builder.Build();</i>"
+                </p>
+                <code>
+                    var builder = WebApplication.CreateBuilder(args);
+                    <span class="code-comment">// otros servicios.</span>
+                    <span class="code-highlight">builder.Services.AddDbContext<<span class="code-parametro">ElPortalDbContext</span> >(options =>
+                    &nbsp;&nbsp;options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));</span>
+                    
+                    var app = builder.Build();
+                </code>                            
+            </article>
+        </section>
+        <section class="main-section" id="agregar_controladores">
+            <header>Agregar controladores</header>
+            <article>
+                <p>
+                    En la carpeta "Controllers" ubicada en la raiz del proyecto, crear un nuevo controlador llamado <i>LibroController</i>, eligiendo la opción <b>API Controller - Empty</b>.
+                </p>
+                <p>
+                    Dentro del controlador, declaramos una variable privada de sólo lectura de tipo <b>elportalContext</b> (o como hayas llamado a tu contexto de base de datos) para luego asignarle una instancia del DbContext mediante inyección de dependencias en el constructor del controlador.
+                </p>
+                <code>
+                    namespace LibreriaElPortal.API.Controllers
+                    {
+                        &nbsp;&nbsp;[Route("api/[Controller]")]
+                        &nbsp;&nbsp;[ApiController]
+                        &nbsp;&nbsp;public class LibroController : Controller
+                        &nbsp;&nbsp;{       
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-highlight">public readonly elportalContext _context; 
+                        &nbsp;&nbsp;&nbsp;&nbsp;public LibroController(elportalContext context)
+                        &nbsp;&nbsp;&nbsp;&nbsp;{
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_context = context;            
+                        &nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                        &nbsp;&nbsp;}
+                    }
+                </code>    
+                <p>
+                    Una vez que tenemos una instancia del DbContext, podemos crear nuestro primer método HTTP.
+                </p>
+                <p>
+                    En el siguiente ejemplo, hacemos un método HTTP GET, para obtener el listado de registros existentes en la tabla de libros:
+                </p>
+                <code>
+                    namespace LibreriaElPortal.API.Controllers
+                    {
+                        &nbsp;&nbsp;[Route("api/[Controller]")]
+                        &nbsp;&nbsp;[ApiController]
+                        &nbsp;&nbsp;public class LibroController : Controller
+                        &nbsp;&nbsp;{       
+                        &nbsp;&nbsp;&nbsp;&nbsp;public readonly elportalContext _context; 
+                        &nbsp;&nbsp;&nbsp;&nbsp;public LibroController(elportalContext context)
+                        &nbsp;&nbsp;&nbsp;&nbsp;{
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_context = context;            
+                        &nbsp;&nbsp;&nbsp;&nbsp;}
+                        <span class="code-highlight">&nbsp;&nbsp;&nbsp;&nbsp;[HttpGet]
+                        &nbsp;&nbsp;&nbsp;&nbsp;public async Task<<span class="code-parametro">IActionResult</span>> GetLibros()
+                        &nbsp;&nbsp;&nbsp;&nbsp;{
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Ok(await _context.Libros.ToListAsync());            
+                        &nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                        &nbsp;&nbsp;}                        
+                    }
+                </code>  
+                <p>
+                    IActionResult permite devolver los diferentes tipos de respuesta posibles de la API, y no sólo de un tipo en particular.
+                </p>                                     
+            </article>
+        </section>
+        <section class="main-section" id="dto_y_automapper">
+            <header>DTOS y AutoMapper</header>
+            <article>
+                <h2 id="dto">Data Transfer Objects (DTO)</h2>
+                <p>
+                    A la hora de recibir o enviar objetos que representen a las diferentes entidades, lo más conveniente es crear clases específicas que contengan sólo la información que sea de interés para cada funcionalidad. A estas clases, las llamamos <b>DTO</b> (de sus siglas en inglés: Data Transfer Object).
+                </p>
+                <p>Por ejemplo, tenemos la entidad <b>Cliente</b> que tiene los siguientes atributos:</p>
+                <code>
+                    public int ClienteId { get; set; }
+                    public string Nombre { get; set; } = null!;
+                    public string Email { get; set; } = null!;
+                    public string? Telefono { get; set; }
+                    public DateTime? FechaAlta { get; set; }
+
+                    public virtual ICollection<<span class="code-highlight">Venta</span>> Venta { get; set; } = new List<<span class="code-highlight">Venta</span>>();
+                </code>
+                <ul>
+                    <li>
+                        A la hora de crear un cliente, dado que el ID del (ClienteId) se genera automáticamente, no sería necesario solicitar el envío de este campo en el input de la solicitud. 
+                    </li>
+                    <li>
+                        Además, la fecha de alta (FechaAlta) debería poder configurarse desde el código, y no ser un dato requerido dentro del input.
+                    </li>
+                    <li>
+                        Por otro lado, EF Core detecta las entidades que tienen relación de muchos a muchos y lo refleja en la clase modelo, agregando en cada una, una lista de objetos de la otra como atributo. En el ejemplo, la clase Cliente tiene una lista de Ventas como atributo. Este atributo tampoco nos interesa si queremos crear un cliente, ya que los registros de ventas los haremos desde un objeto de tipo Venta y en un método específico para ese fin.
+                    </li>
+                </ul>               
+                <p>
+                    Entonces, considerando los puntos mencionados, convendría crear una clase DTO que se ajuste a nuestras necesidades para este caso.
+                </p>
+                <p>
+                    Para ello, crearemos una carpeta con el nombre <b>DTOs</b> en la raiz del proyecto, a la cual le agregaremos la clase <b>AgregarClienteDto.cs</b> con los siguientes atributos:
+                </p>
+                <code>                        
+                    public string Nombre { get; set; } = null!;
+                    public string Email { get; set; } = null!;
+                    public string? Telefono { get; set; }                        
+                </code>   
+                <p>
+                    <img class="project-cap" src="../images/dto-dir.png" alt="">
+                </p> 
+                <h2 id="automapper">AutoMapper</h2>
+                <p>
+                    A la hora de conectar con la base de datos, siempre lo haremos desde un DbSet asociado a una clase de entidad, según lo establecido en el DbContext. Entonces debemos transformar el DTO en una clase de etidad para poder, por ejemplo, insertar un registro en la tabla de Clientes, dado que el contexto no reconoce a la clase DTO como equivalente a la clase de entidad. 
+                </p>  
+                <p>
+                    Para pasar el contenido de un objeto de clase <b>AgregarClienteDto</b> a uno de clase <b>Cliente</b>, existen varias alternativas. Una de ellas es asignar manualmente el valor de cada atributo del objeto de origen a los atributos del objeto de destino. Otra opción es utilizar AutoMapper para que la converción se de de forma automática.
+                </p>                    
+                <h3>Cómo usar AutoMapper</h3>
+                <ul>
+                    <li>
+                        Instalar el paquete AutoMapper desde el administrador de paquetes NuGet. 
+                    </li>
+                    <li>
+                        Establecer los perfiles de mapeo:
+                        <p>
+                            1 - Crear Una carpeta llamada <b>Helpers</b>, <b>Herramientas</b> o como desees (esta carpeta nos será de utilidad para ir agregando clases auxiliares para distintas funcionalidades de la aplicación), y allí, crear la clase <b>MappingProfiles.cs</b>. 
+                        </p>
+                        <p>
+                            2 - Hacer que la clase <b>MappingProfiles.cs</b> herede de <b>Profile</b> y crear un constructor, dentro del cual se van a establecer las relaciones entre Modelos y DTOs.                            
+                        </p>
+                        <code>
+                            public class MappingProfiles : Profile
+                            {
+                            &nbsp;&nbsp;public MappingProfiles()
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;CreateMap<<b>AgregarClienteDto, Cliente</b>>();
+                            &nbsp;&nbsp;}
+                            }
+                        </code>
+                        <p>
+                            El primer argumento es la clase de origen y el segundo es la clase de destino. Por lo que si queremos hacer la conversión inversa, debemos definirlo también en los perfiles de mapeo. 
+                        </p>
+                        <p>
+                            3 - Agregar el servicio de AutoMapper al contenedor de servicios en <b>Program.cs</b>.
+                        </p>
+                        <code>
+                            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+                        </code>
+                    </li>
+                    <li>
+                        <p>
+                            Usar AutoMapper.
+                        </p>
+                        <p>
+                            Para poder usar el perfil de mapeo establecido en <b>MappingProfiles.cs</b>, generar una instancia de IMapper mediante inyección de dependencias. Luego a travez de esta instancia de IMapper, accedo a mis perfiles de mapeo. 
+                        </p>
+                        <code>
+                            [Authorize]
+                            [Route("api/[controller]")]
+                            [ApiController]
+                            public class <span class="code-main-keyword">ClienteController</span> : ControllerBase
+                            {
+                            &nbsp;&nbsp;private readonly elportalContext _Context;
+                            <span class="code-highlight">&nbsp;&nbsp;private readonly IMapper _mapper;</span>
+
+                            <span class="code-comment">&nbsp;&nbsp;// Inyectar las dependencias en el constructor del controlador:</span>
+                            &nbsp;&nbsp;public <span class="code-main-keyword">ClienteController</span>(elportalContext elportalContext, <span class="code-highlight">IMapper mapper</span>)
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp; _Context = elportalContext;
+                            <span class="code-highlight">&nbsp;&nbsp;&nbsp;&nbsp; _mapper = mapper;</span>
+                            &nbsp;&nbsp;}
+                            &nbsp;&nbsp;[HttpPost]
+                            &nbsp;&nbsp;public async Task<<span>IActionResult</span>> <span class="code-main-keyword">CrearCliente</span>([FromBody] <span class="code-highlight">AgregarClienteDto</span> <span class="code-parametro">cliente</span>)
+                            &nbsp;&nbsp;{    
+                           <span class="code-comment">&nbsp;&nbsp;&nbsp;&nbsp;// Conviertir el objeto AgregarClienteDto en un objeto de clase Cliente para asignarlo a newCliente:</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-highlight">Cliente</span> <span class="code-parametro">newCliente</span> = _mapper.Map<<span class="code-highlight">Cliente></span>(<span class="code-parametro">cliente</span>);
+                            &nbsp;&nbsp;&nbsp;&nbsp;newCliente.FechaAlta = DateTime.Now;
+                            &nbsp;&nbsp;&nbsp;&nbsp;await _Context.Clientes.AddAsync(newCliente);
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (await _Context.SaveChangesAsync() > 0)
+                            &nbsp;&nbsp;&nbsp;&nbsp;{                          
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return CreatedAtAction(nameof(GetCliente), new { id = newCliente.ClienteId }, newCliente);
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;return StatusCode(500, "Hubo un error al crear el cliente");                
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+                            }                           
+                        </code>
+                        <div class="notas">
+                            <p>
+                                Tener en cuenta que en este ejemplo no se hacen validaciones ni se contempla el manejo de errores. Es simplemente para mostrar el uso de AutoMapper.
+                            </p>
+                        </div>
+                        
+                    </li>
+                        
+                </ul>
+            </article>
+        </section>
+        <section class="main-section" id="agregar_patron_repository">
+            <header>Emplear patrón de repositorio</header>
+            <article>
+                <p>
+                    El patron de repositorio es un patron de diseño que nos permite abstraer el acceso a la base de datos y la lógica de negocio de los controladores. Esto da como resultado una arquitectura más limpia y fácil de mantener.
+                </p>
+                <h2>Cómo implementar el Patrón de Repositorio</h2>
+                <ol>
+                    <li>
+                        <h3>Crear la capa de repositorio.</h3>
+                        <p>
+                            Para ello necesitamos crear dos directorios nuevos en la raíz del proyecto:
+                        </p>                         
+                        <ul>
+                            <li>
+                                Interfaces: Las interfaces definen un conjunto de operaciones que deben ser implementadas por su correspondiente clase de repositorio. 
+                            </li>
+                            <li>
+                                Repositories (o Repositorios): Los repositorios son las clases donde se desarrolla la lógica de negocio, mediante la implementación de las operaciones definidas en las interfaz.
+                            </li>                            
+                        </ul>
+                        <br>
+                        <p>                            
+                            En el caso de este proyecto, generaremos una clase repositorio para cada entidad.  
+                        </p>
+                    </li>
+                    <li>
+                        <h3>Crear una clase de repositorio y su correspondiente interfaz.</h3>
+                        <ul>
+                            <li>
+                                Primero crearemos la interfaz para clientes con el nombre <b>IClientesRepository.cs</b>.
+                                <p class="dir-arrow">
+                                    Click derecho sobre el directorio "Interfaces" <iconify-icon class="arrow-icon" icon="fa-solid:arrow-right"></iconify-icon> agregar / add <iconify-icon class="arrow-icon"icon="fa-solid:arrow-right"></iconify-icon> nuevo item / new item <iconify-icon class="arrow-icon" icon="fa-solid:arrow-right"></iconify-icon> seleccionar el tipo de item "Interface".
+                                </p>
+                            </li>
+                            <li>
+                                Luego crearemos la clase de repositorio para clientes con el nombre <b>ClientesRepository.cs</b>.
+                                <p class="dir-arrow">
+                                    Click derecho sobre el directorio "Repositories" <iconify-icon class="arrow-icon" icon="fa-solid:arrow-right"></iconify-icon> agregar / add <iconify-icon class="arrow-icon"icon="fa-solid:arrow-right"></iconify-icon> nuevo item / new item <iconify-icon class="arrow-icon" icon="fa-solid:arrow-right"></iconify-icon> seleccionar el tipo de item "Class".
+                                </p>
+                                <p>
+                                    ClientesRepository va a heredar de IClientesRepository e implementará sus métodos.
+                                </p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3>Trasladar los métodos del controlador a la capa de repositorio.</h3>
+                        <p>
+                            Desde el controlador, tomamos el nombre del método de interés, su input y su output, para establecer la firma del método a definir en la interfaz e implementar en la clase repositorio. En este ejemplo, el método que tomamos como referencia, es el de creación de un cliente y lo llamamos CrearClienteAsync, dado que vamos a hacer que el método sea asíncrono.
+                        </p>
+                        <p>
+                            Así nos quedaría nuestra interfaz <b>IClientesRepository</b>: 
+                        </p>
+                        <code>
+                            using LibreriaElPortal.API.DTOs;
+
+                            namespace LibreriaElPortal.API.Interfaces
+                            {
+                            &nbsp;&nbsp;public interface <span class="code-main-keyword">IClientesRepository</span> 
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;Task<<span class="code-parametro">ClienteDto</span>> CreateClienteAsync(<span class="code-parametro">AgregarClienteDto</span> cliente);
+                            &nbsp;&nbsp;}
+                            }
+                        </code>
+                        <p>
+                            Luego en nuestra la clase <b>ClientesRepository</b>, heredamos la interfaz <b>IClientesRepository</b> y generamos una instancia del DbContext mediante inyeccón de dependencias, del mismo modo que anteriormente lo habíamos hecho en el controlador.
+                        </p>
+                        <p>
+                            Finalmente, implementamos el método CrearClienteAsync, trasladando la lógica anteriormente definida en el controlador, pero con algunos cambios:
+                            <ul>
+                                <li>
+                                    Agregaremos un DTO para cliente, que no incluya el atributo que guarda la lista de ventas asociadas, para ser devuelto por el método, en lugar de devolver un objeto Cliente. Lo llamaremos <b>ClienteDto</b>.
+                                </li>
+                                <li>
+                                    Pondremos el código dentro de un bloque try-catch, para manejar posibles errores.
+                                </li>
+                            </ul>.
+                        </p>
+                        <p>
+                            Así nos quedaría nuestra clase <b>ClientesRepository</b>: 
+                        </p>
+                        <code>
+                            using AutoMapper;
+                            using AutoMapper;
+                            using LibreriaElPortal.API.DTOs;
+                            using LibreriaElPortal.API.Interfaces;
+                            using LibreriaElPortal.API.Models;
+                            using Microsoft.EntityFrameworkCore;
+
+                            namespace LibreriaElPortal.API.Repositories
+                            {
+                                &nbsp;&nbsp;public class ClientesRepository : IClientesRepository
+                                &nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;private readonly ElPortalDbContext _Context;
+                                &nbsp;&nbsp;&nbsp;&nbsp;private readonly IMapper _mapper;
+                                
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;public ClientesRepository(ElPortalDbContext elportalContext, IMapper mapper)
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_Context = elportalContext;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_mapper = mapper;            
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;public async Task<<span class="code-parametro">ClienteDto</span>> CreateClienteAsync(<span class="code-parametro">AgregarClienteDto</span> cliente)
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var newCliente = _mapper.Map<<span class="code-parametro">Cliente</span>>(cliente);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newCliente.FechaAlta = DateTime.Now;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;await _Context.Clientes.AddAsync(newCliente);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (await _Context.SaveChangesAsync() > 0)
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Convierto mi cliente en un objeto de tipo clienteDto.</span>                    
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var clienteDto = _mapper.Map<<span class="code-parametro">ClienteDto</span>>(newCliente);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clienteDto.FechaAlta = DateTime.Now;
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Devuelve el objeto ClienteDto.</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return clienteDto;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return null;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch (Exception ex)
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Aquí se podría grabar logs con las excepciones.</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return null;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;}
+                            }
+                        </code>
+                    </li>
+                    <li>
+                        <h3>Modificar el controlador para que llame al método de repositorio.</h3>
+                        <p>
+                            En el controlador, se realiza la inyección de dependencias del repositorio, para obtener una instancia de <b>IClientesRepository</b>.
+                        </p>
+                        <p>
+                            Así nos quedaría nuestro controlador <b>ClienteController</b>: 
+                        </p>
+                        <code>
+                            using LibreriaElPortal.API.DTOs;
+                            using LibreriaElPortal.API.Interfaces;
+                            using Microsoft.AspNetCore.Mvc;
+
+                            namespace LibreriaElPortal.API.Controllers
+                            {
+                                &nbsp;&nbsp;[Route("api/[controller]")]
+                                &nbsp;&nbsp;[ApiController]
+                                &nbsp;&nbsp;public class ClienteController : ControllerBase
+                                &nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;private readonly IClientesRepository _clientesRepository;
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Inyectar las dependencias en el constructor del controlador:</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;public ClienteController(IClientesRepository clientesRepository)
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_clientesRepository = clientesRepository;
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;[HttpPost]
+                                &nbsp;&nbsp;&nbsp;&nbsp;public async Task <<span class="code-highlight">IActionResult</span>> CrearCliente([FromBody] <span class="code-parametro">AgregarClienteDto</span> cliente)
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-parametro">ClienteDto</span> <span class="code-highlight">resultado</span> =  await _clientesRepository.CreateClienteAsync(cliente);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (<span class="code-parametro">resultado</span> == null)
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return StatusCode(500, "Hubo un error al crear el cliente");
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Se devuelve status code 201 (created). La propiedad CreatedAtAction nos permite enviar en el header de la respuesta, la url para buscar el registro con el entpoint GetClienteById (suponiendo que este método exista):</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return <span class="code-highlight">CreatedAtAction</span>(nameof(<span class="code-highlight">GetClienteById</span>), new { id = <span class="code-highlight">resultado</span>.ClienteId }, <span class="code-highlight">resultado</span>);
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;}
+                            }
+                        </code>
+                    </li>
+                    <li>
+                        <h3>Registrar el repositorio en el contenedor de servicios mediante inyección de dependencias:</h3>
+                        <p>
+                            En <b>Program.cs</b>:
+                        </p>
+                        <code>                            
+                            builder.Services.AddScoped<<span class="code-parametro">IClientesRepository</span>, <span class="code-highlight">ClientesRepository</span>>();
+                        </code>
+                    </li>
+                </ol>                                          
+            </article>
+        </section>
+        <section class="main-section" id="actualizar_db">
+            <header>Actualizar base de datos</header>
+            <article>
+                <p>
+                    Como estamos trabajando con enfoque DB Fist, lo más adecuado es hacer las actualizaciones de la base de datos, primero en la base de datos y luego traer los cambios con ingeniería inversa, mediante el comando de Scaffold-DbContext.
+                </p>
+                <p>
+                    Al momento de actualizar los modelos mediante el comando de Scaffold-DbContext, se debe agregar el parámetro <b>-force</b>, para permitir la sobrescritura del DbContext.
+                </p>
+                <p>
+                    Es importante tomar en cuenta las opciones de Scaffold-DbContext que se hayan elegido para la creación inicial del DbContext. Ver estas opciones en en el apartado <a href="#conectar_con_db">Importar entidades de la base de datos</a>.
+                </p>
+                <p>
+                    También se debe tener presente que en los casos de scaffolding sobre un subconjunto de tablas, cuando se quiera incorporar nuevas tablas a nuestro proyecto con el comando de actualización del contexto, es necesario incluir también las tablas anteriores. De lo contrario se perderá el vínculo con estas entidades.
+                </p>
+                <h3>Ejemplo de comando para actualización de DbContext</h3>                
+                <code>
+                    <span class="code-main-keyword">Scaffold-DbContext</span> "Name=DefaultConnection" <span class="code-highlight">-force</span> Microsoft.EntityFrameworkCore.SqlServer <span class="code-parametro">-OutputDir</span> Models
+                </code>
+                                          
+            </article>
+        </section>
+        <section class="main-section" id="probar">
+            <header>Probar la API</header>
+            <article>
+                <p>
+                    Al ejecutar la API se abre la página de Swagger, una interfaz de documentación interactiva que viene integrada en la plantilla de ASP.NET Core Web API.
+                </p>
+                <p>
+                    Desde esta interfaz se puede interactuar con los diferentes endpoints de la API y consultar las URLs, los inputs y los outputs para cada un de ellos.
+                </p>
+                <img class="project-cap" src="../images/swagger-inicio.png"/>      
+                <h3>Cómo probar un endpoint desde Swagger:</h3>
+                <ol>
+                    <li>
+                        Hacer click sobre el endpoint: Esto despliega la información sobre el mismo y muestra un modelo de input.
+                    </li>
+                    <li>
+                        Hacer click en <b>Try it out</b>: Esto permite la edición del modelo de input para agregar los datos con los que se desee realizar la prueba.
+                    </li>
+                    <li>
+                        Hacer click en <b>Execute</b>: Esto ejecutará la solicitud HTTP y mostrará debajo del cuadro del input, los resultados de la operación.
+                    </li>
+                    <li>
+                        Revisar la base de datos: Si se ha ejecutado una acción POST, consultar en la DB si se han reflejado los cambios correctamente. Si la acción fue un GET, comprobar si los resltados devueltos son los correctos.
+                    </li>                    
+                </ol>   
+                <h3>Probar un endpoint desde Postman:</h3> 
+                <ol>
+                    <li>
+                        Obtener la URL y la estructura del input esperado de la página de documentación de Swagger.
+                    </li>
+                    <li>
+                        Abrir postman y completar la información necesaria para la solicitud HTTP, indicando la URL, la ACCIÓN y los inputs (si corresponde).
+                    </li>
+                    <li>
+                        Ejecutar la solicitud mientras la API esté ejecutándose.
+                    </li>
+                </ol>                                
+            </article>
+        </section>
+
+        <section class="main-section" id="posibles-errores-db">
+            <header>Errores comunes en el desarrollo</header>
+            <article>
+                <h3>Error por referencia circular</h3>
+                <p>
+                    En las clases de entidades que tienen relción de muchos a muchos, como se mencionó anteriormente, EF Core genera una lista o colección de una entidad dentro de la otra y viceversa. Al consultar alguna de estas entidades con un GET, dependiendo de si se quiere incluir la colección de la otra entidad, la es posible que se genere un error por referencia circular.
+                </p>
+                <p>
+                    La mejor solución para ésto, es hacer uso de DTOs y acomodar los atributos de cada clase según nos resulte más conveniente.
+                </p>                                            
+            </article>
+        </section>
+        
+        <hr>
+        <footer>
+            <div class="sign-div">
+                <p class="titulo-sign">
+                    Daniela Pinto                
+                </p>
+                <img id="img-titulo" src="../images/cassette.png"/>
+                <p class="titulo-sign-sub">
+                    Software Developer
+                </p>
+            </div>       
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

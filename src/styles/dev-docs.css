@@ -1,0 +1,129 @@
+html{
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+body {
+    margin: 0px;
+    padding: 0px;
+    min-height: 100%;
+    min-height: 100vh;    
+    min-width: 290px;
+    color: #46474d;    
+    background-color: #fefeff;   
+    font-family: 'Open Sans', Arial, sans-serif;
+    line-height: 1.5;  
+    position: relative;  
+}
+
+.titulo{
+    width: 100%;
+    background-color: rgb(245, 244, 247);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;    
+}
+
+.titulo h1{
+    font-size: 50px;
+    color: rgb(7, 87, 141);
+    padding: 30px 0;
+    margin: 0;
+}
+
+.sign-div{
+    background-color: rgb(7, 87, 141, 0.1);
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px 2px rgb(7, 87, 141, 0.05);
+    position: absolute;
+    left: 10px;
+}
+
+.titulo-sign, .titulo-sign-sub{    
+    color: rgb(133, 77, 206);
+    margin: 0;
+}
+
+.titulo-sign{
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    font-size: 1.4rem;
+}
+.titulo-sign-sub{
+    font-size: 1.0rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#img-titulo{
+    height: 55px;    
+}
+
+.main-section{    
+    width: 100%;
+    margin-top: 0px;
+    background-image:url("../images/bg-cute.jpg"); 
+    background-size: cover; 
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-around;     
+    align-items: center;
+    min-height: 70vh;
+    position: relative;
+}
+
+#menu-dev{
+    width: 100%;
+    display: flex;    
+    flex-direction: row;
+    justify-content: space-around;    
+    align-items: space-around;    
+    /*align-content: space-around; */    
+}
+
+.opciones-home{
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    background-color: rgb(245, 244, 247, 0.7);    
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: rgb(7, 87, 141) !important;
+}
+
+.opciones-home:hover{   
+    background-color: rgb(7, 87, 141, 0.4);    
+    display: flex;
+    color: rgb(245, 244, 247, 0.7) !important;    
+}
+
+a{
+    text-decoration: none;
+}
+
+.index-icon{
+    height: 60px;
+    width: auto;
+    font-size: 60px;
+}
+
+.go-home-div{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background-color: rgb(7, 87, 141, 0.4);
+    padding: 5px;
+}
+
+.logo-home{
+   font-size: 1.3rem;
+   color: rgb(245, 244, 247)
+}
+.logo-home:hover{
+    
+    color: rgb(245, 244, 247,0.7)
+ }
