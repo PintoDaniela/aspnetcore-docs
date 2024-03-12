@@ -303,11 +303,13 @@ footer{
 
 @media only screen and (max-width: 815px) {
   /* For mobile phones: */
+  #inicio{
+    display: none;
+  }
   #navbar ul {
     border: 1px solid rgb(7, 87, 141, 0.05);
     height: 207px;
   }
-
   #navbar {
     /* position: absolute; */
     position: fixed;
@@ -320,7 +322,6 @@ footer{
     z-index: 1;
     border-bottom: 2px solid;
   }
-
   #navbar header{
     margin: 0;
   }
@@ -335,7 +336,6 @@ footer{
     margin: 0;
     padding: 0;
   }
-
   #main-doc {
     position: relative;
     left: 0;

@@ -23,40 +23,62 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
+    align-items: center;    
 }
 
 .titulo h1{
     font-size: 50px;
-    color: rgb(7, 141, 123);
+    color: rgb(7, 87, 141);
     padding: 30px 0;
     margin: 0;
 }
 
+.sign-div{
+    background-color: rgb(7, 87, 141, 0.1);
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px 2px rgb(7, 87, 141, 0.05);
+    position: absolute;
+    left: 10px;
+}
+
+.titulo-sign, .titulo-sign-sub{    
+    color: rgb(133, 77, 206);
+    margin: 0;
+}
+
+.titulo-sign{
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    font-size: 1.4rem;
+}
+.titulo-sign-sub{
+    font-size: 1.0rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
 #img-titulo{
-    height: 120px;
-    margin: 15px 0;
+    height: 55px;    
 }
 
 .main-section{    
     width: 100%;
     margin-top: 0px;
-    background-image:url("../images/bg-img-index.jpg"); 
+    background-image:url("../images/bg-cute.jpg"); 
     background-size: cover; 
     background-repeat: no-repeat;
-    display: flex;    
+    display: flex;
     justify-content: space-around;     
     align-items: center;
-    min-height: 70vh;    
+    min-height: 70vh;
+    position: relative;
 }
 
-#menu-home{
+#menu-dev{
     width: 100%;
     display: flex;    
     flex-direction: row;
     justify-content: space-around;    
-    align-items: space-around;
-    flex-wrap: wrap;
+    align-items: space-around;    
     /*align-content: space-around; */    
 }
 
@@ -70,7 +92,7 @@ body {
     text-align: center;
     justify-content: center;
     align-items: center;
-    color: #46474d !important;
+    color: rgb(7, 87, 141) !important;
 }
 
 .opciones-home:hover{   
@@ -89,10 +111,38 @@ a{
     font-size: 60px;
 }
 
-@media only screen and (max-width: 1000px) {
-    /* For mobile phones: */
-    .opciones-home, #menu-home, .titulo{
+.go-home-div{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background-color: rgb(7, 87, 141, 0.4);
+    padding: 5px;
+}
+
+.logo-home{
+   font-size: 1.3rem;
+   color: rgb(245, 244, 247)
+}
+.logo-home:hover{
+    
+    color: rgb(245, 244, 247,0.7)
+ }
+
+ 
+@media only screen and (max-width: 800px) {
+    
+    .sign-div{
+        position: relative;
+
+    }
+    #menu-dev, .titulo{
         display: flex;
         flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .titulo h1{
+        font-size: 30px;
     }
 }
