@@ -127,3 +127,22 @@ a{
     
     color: rgb(245, 244, 247,0.7)
  }
+
+ 
+@media only screen and (max-width: 800px) {
+    
+    .sign-div{
+        position: relative;
+
+    }
+    #menu-dev, .titulo{
+        display: flex;
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .titulo h1{
+        font-size: 30px;
+    }
+}

@@ -142,11 +142,14 @@ header {
 
 #main-doc {
   position: absolute;
-  margin: 0 0 0 310px;
+  left: 310px;
+  right: 0;
+  /* margin: 0 0 0 310px; */
   padding: 20px;
   margin-bottom: 110px;
   text-wrap:wrap;
   overflow-wrap: break-word;
+  width: auto;
 }
 
 .main-section{  
@@ -159,6 +162,7 @@ section article {
   color: #46474d;
   margin: 15px 15px 70px 15px;
   font-size: 0.96em;
+  width: auto;
 }
 section h2{
   color: #46474d;  
@@ -173,9 +177,13 @@ section h3{
   margin-top: 25px;
   max-width: 100%;
 }
+ section ul, section ol{
+  width: auto;
+ }
 
 section li {
   margin: 15px 0px 0px 20px;
+  width: auto;
 }
 
 code{
@@ -192,6 +200,7 @@ code{
   margin: 10px;
   border-radius: 5px;
   color:steelblue !important; 
+  width: auto;
 }
 
 .code-parametro, .code-comment, .code-highlight, .code-main-keyword {
@@ -283,17 +292,25 @@ footer{
   .header-img-container {
     display: none;
   }
+  .titulo-inicio h2{
+    font-size: 2rem;
+  }
+  .logo-main-header{
+    height: 80px;
+  }
+
 }
 
 @media only screen and (max-width: 815px) {
   /* For mobile phones: */
   #navbar ul {
-    border: 1px solid;
+    border: 1px solid rgb(7, 87, 141, 0.05);
     height: 207px;
   }
 
   #navbar {
-    position: absolute;
+    /* position: absolute; */
+    position: fixed;
     top: 0;
     padding: 0;
     margin: 0;
@@ -303,10 +320,27 @@ footer{
     z-index: 1;
     border-bottom: 2px solid;
   }
+
+  #navbar header{
+    margin: 0;
+  }
+  #navbar header sub{
+    display: none;
+  }
+  #navbar header h1{
+    margin: 0;
+    font-size: smaller;
+  }
+  .nav-header-img{
+    margin: 0;
+    padding: 0;
+  }
+
   #main-doc {
     position: relative;
+    left: 0;
     margin-left: 0px;
-    margin-top: 270px;
+    margin-top: 200px;
   }
 }
 

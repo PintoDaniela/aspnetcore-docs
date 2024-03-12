@@ -44,10 +44,10 @@ body {
     background-image:url("../images/bg-img-index.jpg"); 
     background-size: cover; 
     background-repeat: no-repeat;
-    display: flex;
+    display: flex;    
     justify-content: space-around;     
     align-items: center;
-    min-height: 70vh;
+    min-height: 70vh;    
 }
 
 #menu-home{
@@ -56,6 +56,7 @@ body {
     flex-direction: row;
     justify-content: space-around;    
     align-items: space-around;
+    flex-wrap: wrap;
     /*align-content: space-around; */    
 }
 
@@ -88,3 +89,10 @@ a{
     font-size: 60px;
 }
 
+@media only screen and (max-width: 1000px) {
+    /* For mobile phones: */
+    .opciones-home, #menu-home, .titulo{
+        display: flex;
+        flex-direction: column !important;
+    }
+}
