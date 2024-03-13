@@ -4,6 +4,7 @@
     justify-content: center;
     width: 100%;
     background-color: rgba(240, 255, 255, 0.521);
-    color: rgb(126, 68, 201)!important;
+    /* color: rgb(126, 68, 201)!important; */
+    color: green!important;
     padding: 30px 0;
 }
