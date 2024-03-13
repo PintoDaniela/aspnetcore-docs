@@ -9,6 +9,16 @@ body {
   max-width: 100%;
 }
 
+
+
+header {
+  color: black;
+  margin: 10px;
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: thin;
+}
+
 #navbar {
   position: fixed;
   min-width: 300px;
@@ -22,14 +32,6 @@ body {
   overflow-y: scroll;    
 }
 
-header {
-  color: black;
-  margin: 10px;
-  text-align: center;
-  font-size: 1.8em;
-  font-weight: thin;
-}
-
 #navbar header{
     color:rgb(7, 70, 141);
     background-color: rgb(245, 236, 245);
@@ -37,8 +39,7 @@ header {
     font-size: 1.3em;
     font-weight: thin;  
     margin: 0;
-    padding-bottom: 30px;
-    
+    padding-bottom: 30px; 
 }
 
 #navbar header h1{
@@ -66,12 +67,12 @@ header {
   align-items: center;
   justify-content: center;
 }
+
 .icon-home{
   margin-bottom: -9px;
   font-size: 28px;
   margin-right: 15px;
 }
-
 
 #navbar ul {
   height: 88%;
@@ -92,10 +93,9 @@ header {
 
 #navbar li a:hover {
   background-color:rgb(7, 70, 141);  
+  color:rgb(245, 236, 245); 
 }
-#navbar li a:hover{
-  color:rgb(245, 236, 245);   
-}
+
 
 #navbar a {
   display: block;
