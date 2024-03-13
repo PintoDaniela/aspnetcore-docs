@@ -523,20 +523,69 @@
             </article>
         </section>
         <section class="main-section" id="probar">
-            <header>Probar el sistemade autenticación JWT</header>
+            <header>Probar el sistema de autenticación JWT</header>
             <article>
-                <ul>
-                    <li>
-                        Probar con Postman.
-                    </li>
+                <ul>                    
                     <li>
                         Probar con Swagger.
-                    </li>                                    
+                    </li>   
+                    <li>
+                        Probar con Postman.
+                    </li>                                 
                 </ul>
-                <div class="text-center">
+                <h2>Probar autenticación con Swagger</h2>
+                <ol>
+                    <li>
+                        <p>
+                            Ir al botón Authenticate.
+                        </p>
+                        <img class="project-cap" src="../images/jwt-swagger-auth.png" alt="">
+                        
+                    </li>
+                    <li>
+                        <p>
+                            Luego completar el cuadro con la palabra <i>"Bearer"</i> seguida de un espacio y luego copiar el token obtenido como respuesta al hacer una solicitud al endpoint de login.
+                        </p>
+                        <img class="project-cap" src="../images/jwt-swagger-bearer.png" alt="">                       
+                       
+                    </li>
+                    <li>
+                        <p>
+                            Una vez realizado el paso anterior, será posible acceder a los recursos que se encuentren protegidos con el decorador <b>[Authorize]</b>
+                        </p>
+                        <p>El decorador <b>[Authorize]</b> puede ser aplicado a un controlador en general, agregándolo sobre la definición del mismo, o bien sobre un endpoint del controlador específicamente. En el segundo caso, el decorador <b>[Authorize]</b> se coloca encima de la definición del endpoint que se quiera proteger. 
+
+                        </p>
+                    </li>
+                </ol>
+                <h2>Probar autenticación con Postman</h2>
+                <ol>
+                    <li>
+                        Desde Postman, realizar una solicitud al endpoint de login para obtener el token de acceso.
+                    </li>
+                    <li>
+                        Abrir otra solicitud para consumir alguno de los endpoints que se encuentren protegidos y completar todos los datos requeridos para la solicitud (url, parámetros, etc). 
+                    </li>
+                    <li>
+                        Antes de ejecutar la solicitud, ir a <i>Headers</i>, crear la Key <i>Authorization</i> y, como valor, asignar la misma leyenda que se describe para completar el recuadro de la interfaz de Swagger: <b>Bearer</b> <i>mi.token.de.acceso</i> 
+                    </li>
+                    <img class="project-cap" src="../images/jwt-postman-test.png" alt="">
+                </ol>
+                <div class="notas">
+                    NOTAS:
+                    <li>
+                        En caso de que no se realice el paso de autenticación para consumir un endpoint protegido, éste devolverá una respuesta 401 (Unauthorized) y en el header de la respuesta, se recibirá la key <i>WWW-Authenticate</i> con el valor <b>Bearer</b>.
+                    </li>
+                    <li>
+                        Si se intenta enviar un token inválido, el valor de <i>WWW-Authenticate</i> podría tener información más específica acerca del error. Ej., token expirado.
+                    </li>
+                </div>
+               
+                   
+                <!-- <div class="text-center">
                     <p style="font-size: 1.8rem; color: rgba(96, 173, 66);">En construcción...</p>
                     <iconify-icon  style="font-size: 100px; color: rgba(96, 173, 66);" icon="healthicons:plantation-worker-alt"></iconify-icon>
-                </div>
+                </div> -->
             </article>
         </section>
         <hr>
