@@ -599,7 +599,7 @@
                             &nbsp;&nbsp;[HttpPost]
                             &nbsp;&nbsp;public async Task<<span>IActionResult</span>> <span class="code-main-keyword">CrearCliente</span>([FromBody] <span class="code-highlight">AgregarClienteDto</span> <span class="code-parametro">cliente</span>)
                             &nbsp;&nbsp;{    
-                           <span class="code-comment">&nbsp;&nbsp;&nbsp;&nbsp;// Conviertir el objeto AgregarClienteDto en un objeto de clase Cliente para asignarlo a newCliente:</span>
+                           <span class="code-comment">&nbsp;&nbsp;&nbsp;&nbsp;// Convertir el objeto AgregarClienteDto en un objeto de clase Cliente para asignarlo a newCliente:</span>
                             &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-highlight">Cliente</span> <span class="code-parametro">newCliente</span> = _mapper.Map<<span class="code-highlight">Cliente></span>(<span class="code-parametro">cliente</span>);
                             &nbsp;&nbsp;&nbsp;&nbsp;newCliente.FechaAlta = DateTime.Now;
                             &nbsp;&nbsp;&nbsp;&nbsp;await _Context.Clientes.AddAsync(newCliente);
