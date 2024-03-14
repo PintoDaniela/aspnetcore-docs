@@ -37,6 +37,7 @@
             <li><a class="nav-link" href="#code_first">Opción Code First</a></li>
             <li><a class="nav-link" href="#instalar_paquetes">Instalar Paquetes</a></li>  
             <li><a class="nav-link" href="#configuracion">Configuracion para usar el paquete JWT Bearer</a></li>  
+            <li><a class="nav-link" href="#registrar_usuarios">Registrar usuarios</a></li>   
             <li><a class="nav-link" href="#clase_jwt_admin">Emitir y valdar tokens</a></li>   
             <li><a class="nav-link" href="#probar">Probar el sistema de autenticación</a></li>   
         </ul>
@@ -53,24 +54,17 @@
                     <li>Se requiere contar con un sistema de login. Para ello, es necesario crear las tablas correspondientes en nuestra base de datos.</li>
                     <li>Cuando un usuario inicia sesión, si las credenciales son válidas, recibe como resultado un token de acceso.</li>
                     <li>Para acceder a los recursos de la API será requerido incorporar este token en el header de la solicitud, para aquellos recursos que se encuentren protegidos.</li>                    
-                </ul>   
+                </ul>  
+                <br> 
                 <p>
                     ASP.NET Core, también cuenta con un paquete de administración de usuarios llamado <i>Identity</i>, el cual proporciona varias funcionalidades relacionadas con la autenticación y autorización de usuarios. 
                 </p>             
-                <p class="notas-light">
-                    <iconify-icon icon="pajamas:status-alert"></iconify-icon> En esta guía, como la intención es centrarnos en el uso de JWT, no usaremos <i>Identity</i> y nos limitaremos a usar una tabla simple de usuarios, con lo mínimo indispensable para entender cómo funciona este paquete. Si te interesa investigar cómo funciona <i>Identity</i>, podés visitar la <a href="https://learn.microsoft.com/es-es/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio">página de documentación oficial de Microsoft</a>.
+                <p>
+                    En esta guía, dado que la intención es centrarnos en el uso de JWT, no usaremos <i>Identity</i> y nos limitaremos a usar una tabla de usuarios sensilla, para entender cómo funciona esta herramienta. Si te interesa investigar lo que ofrece <i>Identity</i>, podés visitar la <a href="https://learn.microsoft.com/es-es/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio">página de documentación oficial de Microsoft</a>.
                 </p>
-                <div class="notas">
-                    NOTAS:
-                    <ul>
-                        <li>
-                            Si te interesa investigar cómo funciona <i>Identity</i>, podés visitar la <a href="https://learn.microsoft.com/es-es/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio">página de documentación oficial de Microsoft</a>.
-                        </li>
-                        <li>
-                            Si querés saber más sobre JWT, podés visitar el <a href="https://jwt.io/">sitio oficial de JWT</a>, donde encontrarás toda la documentación disponible.
-                        </li>
-                    </ul>               
-                </div>
+                <p>
+                    Si querés saber más sobre JWT, podés visitar el <a href="https://jwt.io/">sitio oficial de JWT</a>, donde encontrarás toda la documentación disponible.
+                </p>                
             </article>
         </section>
         <section class="main-section" id="Requisitos_previos">
@@ -89,7 +83,7 @@
                         Un proyecto ASP.NET Core Web API (.NET 6 o superior).
                     </li>
                     <li>
-                        Postman (No es obligatorio).
+                        Postman (No es obligatorio, pero es recomendable).
                     </li>                    
                 </ul>
             </article>
@@ -101,7 +95,10 @@
                 <ul>
                     <li>
                         ASP.NET Core Web API (.NET 6 o superior).
-                    </li>   
+                    </li> 
+                    <li>
+                        Entity Framework Core.
+                    </li>  
                     <li>
                         Nociones básicas del protocolo HTTP.
                     </li>    
@@ -130,11 +127,12 @@
                     </ul>                
                 </div>                          
                 <p>
-                    Se crea la tabla <b>Users</b> en la base de datos y, opcionalmente, se puede crear también otra tabla llamada <b>TiposUsuario</b>, si se quiere agregar distintos tipos de permisos a los usuarios (autorización).                    
+                    Se crea la tabla <b>Users</b> en la base de datos y, opcionalmente, se pueden crear también otras tablas como <b>Roles</b> y <b>UserRoles</b>, si se quiere agregar distintos tipos de permisos a los usuarios (autorización).                    
                 </p>   
                 <p>
-                    En el caso de que se quiera agregar autorización, además de la autenticación, se podría incorporar dos tipos de usuario: <i>Usuario</i> y <i>Administrador</i>. Así que se agregaran dos registros a la tabla de tipos de usuario (TiposUsuario) con estos nombres.
-                </p>             
+                    Como la finalidad de esta guía es abordar el uso de tokens JWT, nos limitaremos a trabajar simplemente con la tabla de usuarios.
+                </p>            
+                
                 <h2>Script T-SQL para la creación de las tablas</h2>                
                 <code>                                       
                     <span class="code-main-keyword">CREATE TABLE</span> [dbo].[<span class="code-highlight">Users</span>] (
@@ -147,23 +145,11 @@
                     &nbsp;&nbsp;[TipoUsuario]    int        NOT NULL,
                     &nbsp;&nbsp;PRIMARY KEY CLUSTERED ([Id] ASC),
                     &nbsp;&nbsp;UNIQUE NONCLUSTERED ([Username] ASC)
-                    );
-                    
-                    <span class="code-comment">/* OPCIONAL: */</span>
-                    <span class="code-main-keyword">CREATE TABLE</span> <span class="code-highlight">TiposUsuario</span>(
-                    &nbsp;&nbsp;Id int IDENTITY (1, 1) NOT NULL,
-                    &nbsp;&nbsp;Descripcion VARCHAR (50) NOT NULL,
-                    &nbsp;&nbsp;PRIMARY KEY CLUSTERED ([Id] ASC),
-                    )                    
+                    );   
                 </code>
-                <h2>Script T-SQL para la Inserción de Tipos de Usuario (opcional)</h2>
-                <code>
-                    <span class="code-main-keyword">INSERT INTO</span> <span class="code-highlight">TiposUsuario</span> (Descripcion)
-                    VALUES ('Administrador');
-
-                    <span class="code-main-keyword">INSERT INTO</span> <span class="code-highlight">TiposUsuario</span> (Descripcion)
-                    VALUES ('Usuario');
-                </code>                       
+                <p>
+                    Usamos los campos <p>PasswordHash</p> y <p>PasswordSalt</p> para guardar la contraseña encriptada y no exponer esta información en la tabla de usuarios de forma directa.
+                </p>        
             </article>
         </section>
         <section class="main-section" id="scaffold">
@@ -175,7 +161,7 @@
                     </li>
                     <li>
                         <p>
-                            Correr el comando <b>Scaffold-DbContext</b> de actualización, para traer las nuevas tablas de la base de datos.
+                            Correr el comando <b>Scaffold-DbContext</b> de actualización, para traer las nuevas tablas de la base de datos. Al tratarse de una actualización, es importante recordar incluir el parámetro <i>-Force</i>, para permitir la sobrescritura del DbContext.
                         </p>
                         <p>
                             Ejemplo:
@@ -185,7 +171,13 @@
                         </code>
                         <div class="notas">
                             <p>
-                                Ver opciones de scaffolding en la  <a href="./guia-web-api.html#opciones_scaffold">Guía ASP.NET Core Web API</a>.
+                                Se asume que se está trabajando sobre un proyecto ASP.NET Core existente, que usa EntityFrameworkCore. Si el proyecto se creó de cero para probar el sistema de autenticación, ver el apartado de <a href="./guia-web-api.html#instalar_paquetes"></a> instalación de paquetes NuGet de la Guía ASP.NET Core Web API, para agregar los paquetes que serán requeridos previamente a la ejecución del comando anterior. 
+                            </p>
+                            <p>
+                                Este comando es válido sólo si se está usando la configuración por defecto de scaffolding.
+                            </p>
+                            <p>
+                                Si se está trabajando con Scaffolding personalizado, ver las opciones de scaffolding en la <a href="./guia-web-api.html#opciones_scaffold">Guía ASP.NET Core Web API</a>.
                             </p>
                         </div>
                     </li>                   
@@ -198,7 +190,7 @@
                 <h2>En caso de estar trabajando en un proyecto Code First:</h2> 
                 <ol>
                     <li>
-                        Crear las clases de entidad de modo que coincidan con lo propuesto para las tablas Users y TiposUsuario, descriptas en el apartado <a href="#crear_tablas">DB First</a>.
+                        Crear las clases de entidad de modo que coincidan con lo propuesto para la tabla <b>Users</b> descripta en el apartado <a href="#crear_tablas">DB First</a> y, en caso de querer agregar diferentes tipos de permiso, crear también las clases de entidad para establecer las tablas necesarias para definir los roes.
                     </li>
                     <li>
                         Abrir la Consola de Administración de Paquetes.
@@ -224,11 +216,13 @@
                         <code>
                             <span class="code-highlight">Update-Database</span>
                         </code>  
+                        <p>
+                            Luego de esto, se debería poder visualizar las tablas creadas en la base de datos.
+                        </p>
                     </li>           
                 </ol>          
             </article>
-        </section>      
-         
+        </section>
         <section class="main-section" id="instalar_paquetes">
             <header>Instalar paquetes</header>
             <article>
@@ -328,7 +322,7 @@
                     <li>
                         Si se quiere realizar pruebas desde Swagger UI, se debe configurar Swagger para que utilice autenticación JWT Bearer:
                     </li>   
-                    <!-- <code>
+                    <code>
                         var builder = WebApplication.CreateBuilder(args);
 
                         <span class="code-comment">//Auth - JWT Token</span>
@@ -364,7 +358,7 @@
                             &nbsp;&nbsp;c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                             &nbsp;&nbsp;{
                             &nbsp;&nbsp;&nbsp;&nbsp;In = ParameterLocation.Header,
-                            Description = "Por favor, introduce el token JWT en este formato: Bearer <i>tu token de acceso</i><br>Separando la palabra \"Bearer\" del token por un espacio.",
+                            &nbsp;&nbsp;&nbsp;&nbsp;Description = "Por favor, introduce el token JWT en este formato: Bearer <i>tu.token.de.acceso</i>, separando la palabra \"Bearer\" del token por un espacio.",
                             &nbsp;&nbsp;&nbsp;&nbsp;Name = "Authorization",
                             &nbsp;&nbsp;&nbsp;&nbsp;Type = SecuritySchemeType.ApiKey
                             &nbsp;&nbsp;});
@@ -384,21 +378,174 @@
                             <span class="code_comment">// Otros servicios</span>                                
                         
                         var app = builder.Build();
-                    </code>    -->
+                    </code>   
                 </ul>            
             </article>
         </section>
 
-        <section class="main-section" id="clase_jwt_admin">
-            <header>Emitir y valdar tokens</header>
+        <section class="main-section" id="registrar_usuarios">
+            <header>Registrar usuarios</header>
             <article>
-                <p>Se crea una nueva clase con la finalidad de administrar la emisión y validación de tokens. Esta clase se va a ubicar en un directorio destinado a clases auxiliares, de utilidad para diferentes servicios y funcionalidades de la API.</p> 
+                <p>
+                    Como se menciona en el apartado donde se crea de la tabla de usuarios, la contraseña la guardaremos encriptada en la base de datos, con el objetivo de proteger esta información.
+                </p>
+                <p>
+                    Por este motivo, será necesario crear una clase auxiliar con métodos para encriptar y validar la contraseña. 
+                </p>
+                <p>
+                    A continuación se detallan los pasos a seguir para administrar el manejo de contraseñas al registrar y validar un usuario.
+                </p>
                 <ol>
                     <li>
                         Si no existe, crear el directorio auxiliar en la raíz del proyecto. Ej., "Helpers".
                     </li>
                     <li>
-                        Dentro del directorio creado en el punto anterior, crear la clase estática <b>JwtTokenManager.cs</b>
+                        Dentro de este directorio auxiliar, crear la clase <i>PasswordHasher</i>.
+                    </li>
+                    <li>
+                        Esta clase tendrá dos métodos estáticos: 
+                        <li>
+                            <b>HashPassword</b>, que recibe la contraseña ingresada por el usuario al registrarse y devuelve la contraseña encriptada y un valor de tipo byte[] que sirve como llave para luego desencriptar la contraseña guardada a la hora de validar el proceso de login.
+                        </li>
+                        <li>
+                            <b>VerifyPassword</b>, que recibe la contraseña ingresada por el usuario y los valores <i>PasswordHash</i> y <i>PasswordSalt</i> guardados en la tabla de usuarios, para el nombre de usuario ingresado.
+                        </li>
+                    </li>
+                    <li>
+                        Así se verá nuestra clase que administra el registro y validación de contraseñas:
+                        <code>
+                            using System.Security.Cryptography;
+                            using System.Text;
+
+                            namespace JwtTokenTest2.Helper
+                            {
+                                &nbsp;&nbsp;public class PasswordHasher
+                                &nbsp;&nbsp;{
+                                <span class="code-main-keyword">&nbsp;&nbsp;&nbsp;&nbsp;public static (string hashedPassword, byte[] salt) HashPassword(string password)</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using (var sha256 = SHA256.Create())
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] salt = new byte[16];
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using (var rng = RandomNumberGenerator.Create())
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rng.GetBytes(salt);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] saltedPassword = new byte[passwordBytes.Length + salt.Length];
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buffer.BlockCopy(passwordBytes, 0, saltedPassword, 0, passwordBytes.Length);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buffer.BlockCopy(salt, 0, saltedPassword, passwordBytes.Length, salt.Length);
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] hashedPassword = sha256.ComputeHash(saltedPassword);
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (Convert.ToBase64String(hashedPassword), salt);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+
+                                <span class="code-main-keyword">&nbsp;&nbsp;&nbsp;&nbsp;public static bool VerifyPassword(string hashedPassword, byte[] salt, string passwordToCheck)</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using (var sha256 = SHA256.Create())
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordToCheck);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] saltedPassword = new byte[passwordBytes.Length + salt.Length];
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buffer.BlockCopy(passwordBytes, 0, saltedPassword, 0, passwordBytes.Length);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buffer.BlockCopy(salt, 0, saltedPassword, passwordBytes.Length, salt.Length);
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte[] hashedPasswordToCheck = sha256.ComputeHash(saltedPassword);
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string hashedPasswordToCheckBase64 = Convert.ToBase64String(hashedPasswordToCheck);
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return hashedPassword == hashedPasswordToCheckBase64;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;&nbsp;&nbsp;}
+                                &nbsp;&nbsp;}
+                            }
+                        </code>
+                    </li>
+                    <li>
+                        Llamado a estos métodos desde el controlador de usuarios:
+                        <code>
+                            using JwtTokenTest2.Data;
+                            using JwtTokenTest2.DTOs;
+                            using JwtTokenTest2.Helper;
+                            using JwtTokenTest2.Models;
+                            using Microsoft.AspNetCore.Mvc;
+
+                            namespace JwtTokenTest2.Controllers
+                            {
+                            &nbsp;&nbsp;[Route("api/[controller]")]
+                            &nbsp;&nbsp;[ApiController]
+                            &nbsp;&nbsp;public class AuthController : ControllerBase
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;private readonly IConfiguration _config;
+                            &nbsp;&nbsp;&nbsp;&nbsp;private readonly AppDbContext _appDbContext;
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;public AuthController(IConfiguration config, AppDbContext appDbContext)
+                            &nbsp;&nbsp;&nbsp;&nbsp;{  
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_config = config;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_appDbContext = appDbContext;   
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;[HttpPost("register")]
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Se utiliza un DTO de usuario que tiene como atributos UserName y Password</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;public async Task<IActionResult> Register([FromBody] UserDto newUser)
+                            &nbsp;&nbsp;&nbsp;&nbsp;{
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-highlight">var (hashedPassword, passwordSalt) = PasswordHasher.HashPassword(newUser.Password);
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var user = new User { 
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UserName = newUser.UserName,
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PasswordHash = hashedPassword,
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PasswordSalt = passwordSalt
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;await _appDbContext.AddAsync(user);
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var usuarioCreado = _appDbContext.SaveChangesAsync().Result;
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (usuarioCreado >= 0)
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return CreatedAtAction("Register", user.Id, user);
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return BadRequest();
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;[HttpPost("login")]
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Se utiliza un DTO de usuario que tiene como atributos UserName y Password</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;public IActionResult Login([FromBody] UserDto loginUser)
+                            &nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bool validPass = false;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var user = _appDbContext.Users.FirstOrDefault(u => u.UserName.Equals(loginUser.UserName));
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (user != null)
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-highlight">validPass = PasswordHasher.VerifyPassword(user.PasswordHash, user.PasswordSalt, loginUser.Password);</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (user == null || !validPass)
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Unauthorized("Credenciales inválidas");
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// El manejo del token JWT se verá en el siguiente apartado.</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var token = JwtTokenManager.GenerateJwtToken(user, _config);
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Ok(new { Token = token });
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;}
+                            }
+                        </code>
+                    </li>
+                </ol>
+
+            </article>
+        </section>
+
+
+        <section class="main-section" id="clase_jwt_admin">
+            <header>Emitir y valdar tokens</header>
+            <article>
+                <p>Se crea una nueva clase con la finalidad de administrar la emisión y validación de tokens. Esta clase se va a ubicar en un directorio destinado a clases auxiliares, de utilidad para diferentes servicios y funcionalidades de la API.</p> 
+                <ol>                   
+                    <li>
+                        Dentro del directorio auxiliar creado en el punto anterior, crear la clase estática <b>JwtTokenManager.cs</b>
                     </li>
                     <li>
                         En esta clase de van a definir dos métodos estáticos:
@@ -489,6 +636,7 @@
                             &nbsp;&nbsp;}
                            
                             &nbsp;&nbsp;[HttpPost("login")]
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Se utiliza un DTO de usuario que tiene como atributos UserName y Password</span>
                             &nbsp;&nbsp;public IActionResult <span class="code-highlight">Login</span>([FromBody] UserDto loginUser)
                             &nbsp;&nbsp;{
                             &nbsp;&nbsp;&nbsp;&nbsp;bool validPass = false;
