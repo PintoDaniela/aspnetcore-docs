@@ -115,7 +115,7 @@ header {
   justify-content: center;
   align-items: center;
   margin: 0  0  0 300px; 
-  background-image: linear-gradient(rgb(245, 244, 247), rgb(98, 24, 247));
+  background-image: linear-gradient(rgba(123, 104, 238, 0.5), rgba(123, 104, 238));
 }
 
 .titulo-inicio h2{
@@ -222,7 +222,7 @@ code{
 }
 
 .notas{
-  background-color: rgba(96, 173, 66, 0.4);
+  background-color: rgba(39, 218, 39, 0.541);
   border-radius: 0.5rem;
   padding: 7px;
   box-shadow: 4px 4px 2px 2px #46474da2 ;
