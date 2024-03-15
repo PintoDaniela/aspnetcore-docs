@@ -40,6 +40,7 @@
             <li><a class="nav-link" href="#registrar_usuarios">Registrar usuarios</a></li>   
             <li><a class="nav-link" href="#clase_jwt_admin">Emitir y valdar tokens</a></li>   
             <li><a class="nav-link" href="#probar">Probar el sistema de autenticación</a></li>   
+            <li><a class="nav-link" href="#consumir">Consumir una API con autenticación JWT</a></li>   
         </ul>
     </nav>
     <main id="main-doc">        
@@ -731,13 +732,160 @@
                     <li>
                         Si se intenta enviar un token inválido, el valor de <i>WWW-Authenticate</i> podría tener información más específica acerca del error. Ej., token expirado.
                     </li>
-                </div>
-               
-                   
+                </div>  
                 <!-- <div class="text-center">
                     <p style="font-size: 1.8rem; color: rgba(96, 173, 66);">En construcción...</p>
                     <iconify-icon  style="font-size: 100px; color: rgba(96, 173, 66);" icon="healthicons:plantation-worker-alt"></iconify-icon>
                 </div> -->
+            </article>
+        </section>
+        <section class="main-section" id="consumir">
+            <header>Consumir una API con autenticación JWT</header>
+            <article>          
+                <p>
+                    Consumo de una API con autenticación JWT desde una aplicación ASP.NET Core MVC.                    
+                </p>
+                <h2>Agregar servicios al contenedor:</h2> 
+                <p>
+                    En el archivo Program.cs, se agregan dos servicios: 
+                    <ul>
+                        <li>
+                            El cliente http para consumir la API
+                        </li>
+                        <li>
+                            La sesión para almacenar coockies
+                        </li>
+                    </ul>
+                </p>          
+                <code>
+                    var builder = WebApplication.CreateBuilder(args);
+                    
+                    <span class="code-highlight">builder.Services.AddHttpClient("API", client =>
+                    {
+                    &nbsp;&nbsp;client.BaseAddress = new Uri("https://localhost:80");
+                    &nbsp;&nbsp;client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    });
+                    builder.Services.AddSession(options =>
+                    {
+                    &nbsp;&nbsp;options.Cookie.HttpOnly = true;
+                    &nbsp;&nbsp;options.Cookie.IsEssential = true;
+                    &nbsp;&nbsp;options.Cookie.SameSite = SameSiteMode.None;
+                    &nbsp;&nbsp;options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    });</span>                     
+                    <span class="code-comment">// Otros servicios...</span>
+                    
+                    var app = builder.Build();
+                </code>
+                <h2>Indicar que la aplicación va a hacer uso de variables de sesión, del contexto http, autenticación y autorización:</h2>                      
+                <code>
+                    var app = builder.Build();
+                    <span class="code-highlight">
+                    app.UseAuthentication();
+                    app.UseAuthorization();
+
+                    app.MapControllerRoute(
+                    &nbsp;&nbsp;name: "default",
+                    &nbsp;&nbsp;pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                    app.UseSession();
+                    app.UseRouting();
+
+                    app.UseEndpoints(endpoints =>
+                    {
+                    &nbsp;&nbsp;endpoints.MapControllerRoute(
+                    &nbsp;&nbsp;&nbsp;&nbsp;name: "default",
+                    &nbsp;&nbsp;&nbsp;&nbsp;pattern: "{controller=Home}/{action=Index}/{id?}");
+                    });
+                    </span>
+                    app.Run();
+                </code>
+                <h2>Guardar y consultar información de sesión de un usuario:</h2>
+                <ul>
+                    <li>
+                        <p>
+                            Guardar información del usuario en las cookies de la sesión, al consumir el endpoint de login.
+                        </p>                        
+                        <code>
+                            [HttpPost]
+                            public async Task<<span>IActionResult</span>><span class="code-main-keyword">Login</span>(UserDto user)
+                            {
+                            &nbsp;&nbsp;var token = await _accountRepository.LoginAsync(user);
+    
+                            &nbsp;&nbsp;if (token == null)
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;TempData["Error"] = "Credenciales inválidas";
+                            &nbsp;&nbsp;&nbsp;&nbsp;return RedirectToAction("Login");
+                            &nbsp;&nbsp;}
+                            &nbsp;&nbsp;
+                            &nbsp;&nbsp;JsonDocument jsonDocument = JsonDocument.Parse(token);
+    
+                            &nbsp;&nbsp;var tokenValue = "";
+                            &nbsp;&nbsp;if (jsonDocument.RootElement.TryGetProperty("token", out JsonElement tokenElement))
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;tokenValue = tokenElement.GetString();
+                            &nbsp;&nbsp;}
+    
+                            &nbsp;&nbsp;if (!string.IsNullOrEmpty(tokenValue))
+                            &nbsp;&nbsp;{
+                            <span class="code-highlight">&nbsp;&nbsp;&nbsp;&nbsp;HttpContext.Session.SetString("UserName", user.UserName);
+                            &nbsp;&nbsp;&nbsp;&nbsp;HttpContext.Session.SetString("Token", tokenValue);</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;return RedirectToAction("Index", "Home");
+                            &nbsp;&nbsp;}
+                            &nbsp;&nbsp;else
+                            &nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;TempData["Error"] = "Credenciales inválidas";
+                            &nbsp;&nbsp;&nbsp;&nbsp;return RedirectToAction("Login");
+                            &nbsp;&nbsp;}
+                            }
+                        </code>
+                    </li>
+                    <li>
+                        <p>
+                            Consultar información guardadda en las cookies de la sesión, para validar el usuario al consumir los endpoints protegidos.
+                        </p>                        
+                        <code>                            
+                            [HttpPost]
+                            public async Task<<span>IActionResult</span>> <span class="code-main-keyword">RealizarPedido</span>(List<<span>DetallePedidoDto</span>> pedidoItems)
+                            {
+                            &nbsp;&nbsp;var itemsSeleccionados = pedidoItems
+                            &nbsp;&nbsp;&nbsp;&nbsp;.Where(item => !string.IsNullOrEmpty(item.Empanada) && item.Cantidad >= 1)
+                            &nbsp;&nbsp;&nbsp;&nbsp;.ToList();
+                            &nbsp;&nbsp;if (itemsSeleccionados.Count > 0)
+                            &nbsp;&nbsp;{
+
+                            <span class="code-comment">&nbsp;&nbsp;&nbsp;&nbsp;//Consultar los valores de las variables de sesión "UserName" y "Token" que creé en el login.</span> 
+                            <span class="code-highlight">&nbsp;&nbsp;&nbsp;&nbsp;var userName = HttpContext.Session.GetString("UserName");
+                            &nbsp;&nbsp;&nbsp;&nbsp;var token = HttpContext.Session.GetString("Token");</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;var pedidoDto = new PedidoDto
+                            &nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NombreUsuario = userName,
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pedido = itemsSeleccionados
+                            &nbsp;&nbsp;&nbsp;&nbsp;};
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;var respuestaPedido = await _pedidoRepository.RealizarPedido(userName, pedidoDto, token);
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (!string.IsNullOrEmpty(respuestaPedido))
+                            &nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(respuestaPedido == "Ok")
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return RedirectToAction("MostrarPedido", pedidoDto);
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (respuestaPedido == "400")
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ModelState.AddModelError(string.Empty, "Ya hiciste tu pedido el día de hoy.");
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}   
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;&nbsp;&nbsp;else
+                            &nbsp;&nbsp;&nbsp;&nbsp;{
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ModelState.AddModelError(string.Empty, "Error al realizar el pedido");
+                            &nbsp;&nbsp;&nbsp;&nbsp;}
+                            &nbsp;&nbsp;}
+                            &nbsp;&nbsp;return View("../Home/Index");
+                            }
+                        </code>
+                    </li>
+                    
+                </ul>
             </article>
         </section>
         <hr>
