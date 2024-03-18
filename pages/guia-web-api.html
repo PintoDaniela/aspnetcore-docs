@@ -38,6 +38,7 @@
             <li><a class="nav-link" href="#Conocimientos_requeridos">Qué necesito saber</a></li>
             <li><a class="nav-link" href="#aspnet_core">ASP.NET Core</a></li>
             <li><a class="nav-link" href="#pasos_a_seguir">Pasos a seguir</a></li>            
+            <li><a class="nav-link" href="#arquitectura">Arquitectura general del proyecto</a></li>            
             <li><a class="nav-link" href="#crear_db">Crear la base de datos</a></li>
             <li><a class="nav-link" href="#crear_proyecto">Crear el proyecto</a></li>
             <li><a class="nav-link" href="#instalar_paquetes">Insalar Paquetes NuGet</a></li>
@@ -176,6 +177,25 @@
                         Actualizar base de datos.
                     </li>                    
                 </ul>               
+            </article>
+        </section>
+        <section class="main-section" id="arquitectura">
+            <header>Arquitectura del proyecto</header>
+            <article>
+                <p>
+                    La arquitectura del proyecto a desarrollar en esta guía, se basa en el patrón de repositorio. En este patrón de diseño se agrega una capa de abstracción entre el controlador y la conexión con base de datos.  
+                </p>
+                <p>
+                    Esto permite que el proyecto sea más escalable y fácil de mantener. Además de que proporciona un código más limpio y modular, gracias a que facilita su reutilización.
+                </p>
+                <h2>El esquema general del proyecto:</h2>
+                <img class="project-cap" src="../images/api-arquitectura.png" alt="">
+                <p>
+                    Los directorios contenidos en el proyecto pueden variar, pero en este caso se trabajará con esta estructura. Se agregarán algunas carpetas adicionales que se mencionarán cuando sea requerido.
+                </p>
+                <p>
+                    En algunos proyectos (Ej., enfoque Code First), es frecuente que se ubique el DbContext en una carpeta separada, llamada <i>Data</i>. Sin embargo, al tratarse de un proyecto DB First, el DbContext se guardará automáticamente en el mismo directorio donde se generarán las clases de entidad (<i>Models</i>). 
+                </p>
             </article>
         </section>
         <section class="main-section" id="crear_db">
