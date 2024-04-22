@@ -16,6 +16,111 @@ body {
     position: relative;  
 }
 
+a{
+    text-decoration: none !important;
+}
+
+/*Menu header*/
+header{  
+    width: 100%;
+    height: auto;
+    position: fixed;
+    z-index: 2;
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+  
+  nav {
+    width: 100%;
+    height: auto;  
+    display: flex;
+    justify-content: start;   
+    background-color: #9a86ff;    
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+  
+  .dropdown{   
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+  }
+  
+  .nav-bar{
+    display: none;
+  }
+  
+  .nav-bar.show{
+    display: flex;
+    flex-direction: column;
+    font-size:13px; 
+    margin-top: 25px; 
+  }
+  
+  .nav-bar li {
+    padding: 10px 0; 
+    color: white;
+    margin: 0px;
+    list-style-type: none;
+    z-index: 1;
+    font-size: 15px;
+    border-top: solid 1px rgb(79, 64, 206);
+  }
+  .dropdown a{
+    color: white;
+    text-decoration-line: none;
+  }
+  .dropdown a li:hover{  
+    background-color: #9a86ff;  
+    color: rgb(79, 64, 206);
+  
+  }
+  
+  .hamburger {
+    border: 0px;
+    background-color: transparent;
+    color:#f5f6f7;
+    margin: 25px 25px 0 25px;  
+    font-size: 20px;
+    padding: 0px;
+  }
+  
+  .hamburger:hover{
+    color: rgb(79, 64, 206);
+  }
+
+  /*Logo header*/
+.sign-div{
+    background-color: rgb(7, 87, 141, 0.1);
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px 2px rgb(7, 87, 141, 0.05);
+    position: absolute;
+    right: 10px;
+    text-align: center;
+}
+
+.titulo-sign, .titulo-sign-sub{    
+    color: rgb(247, 244, 246);
+    margin: 0;
+    text-align: center;
+}
+
+.titulo-sign{
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    font-weight:lighter;
+}
+.titulo-sign-sub{
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#img-titulo{
+    height: 35px;    
+}
+
+/*Título*/
 .titulo{
     width: 100%;
     background-color: rgb(245, 244, 247);
@@ -24,6 +129,7 @@ body {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;    
+    padding-top: 80px;
 }
 
 .titulo h1{
@@ -33,33 +139,8 @@ body {
     margin: 0;
 }
 
-.sign-div{
-    background-color: rgb(7, 87, 141, 0.1);
-    border-radius: 50%;
-    box-shadow: 2px 2px 2px 2px rgb(7, 87, 141, 0.05);
-    position: absolute;
-    left: 10px;
-}
 
-.titulo-sign, .titulo-sign-sub{    
-    color: rgb(133, 77, 206);
-    margin: 0;
-}
-
-.titulo-sign{
-    font-family: 'Times New Roman', Times, serif;
-    font-style: italic;
-    font-size: 1.4rem;
-}
-.titulo-sign-sub{
-    font-size: 1.0rem;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-#img-titulo{
-    height: 55px;    
-}
-
+/*Sección principal*/
 .main-section{    
     width: 100%;
     margin-top: 0px;
@@ -128,11 +209,48 @@ a{
     color: rgb(245, 244, 247,0.7)
  }
 
+
+ /*Contacto*/
+ .redes{
+    text-align: center;
+    padding-bottom: 50px;
+ }
+ .redes h3{
+    font-size: 2rem !important;
+    color: rgb(7, 87, 141);
+    padding: 80px 0 30px 0;
+    margin: 0;
+}
+.redes h4{
+    color: rgb(7, 87, 141);
+    padding: 30px 0;
+    margin: 0;
+    font-size: 1.8rem !important;
+    font-weight: lighter;
+}
+
+.redes i{
+    margin: 15px;
+    font-size: 50px;
+    color:#9a86ff;
+  }
+  
+  .redes i:hover{
+    margin-top: 10px;
+    /*font-size: 55px;*/
+    color:#EEBBC3;
+  }
+  
+  .redes h3{
+    font-size: 22px;
+    font-weight: lighter;
+  }
+
  
 @media only screen and (max-width: 800px) {
     
     .sign-div{
-        position: relative;
+        display: none;
 
     }
     #menu-dev, .titulo{
