@@ -363,6 +363,9 @@
                 <p>
                     3. Ejecutar el comando de Scaffolding para crear automáticamente las clases de entidades en Models y el archivo de contexto, a partir de la base de datos.
                 </p>
+                <p class="notas-light">
+                    <iconify-icon icon="pajamas:status-alert"></iconify-icon> El siguiente comando del ejemplo <b>trae la totalidad de las tablas existentes en la dase de datos</b>, normalizando los nombres de las entidades según la nomenclatura por defecto predeterminada por el framework. Más adelante se describen algunas opciones para personalizar el proceso de Scaffolding.
+                </p>
                 <code><span class="code-main-keyword">Scaffold-DbContext</span> "Server=.\SQLExpress;Database=elportal;Trusted_Connection=true;TrustServerCertificate=true;" Microsoft.EntityFrameworkCore.SqlServer <span class="code-parametro">-OutputDir</span> Models</code>
                 <p>Con este comando se genera un directorio con el nombre <b>Models</b> con el siguiente contenido:</p>
                 <ul>
@@ -381,7 +384,6 @@
                         <li>
                             La cadena de conexión del ejemplo es válida para una conexión con autenticación de Windows. Para acceder con usuario y contraseña, quitar el atributo <b>Trusted_Connection=true;</b> y agregar usuario y contraseña a la cadena de conexión.
                         </li>
-                        <li>El comando del ejemplo <b>trae la totalidad de las tablas existentes en la dase de datos</b>, normalizando los nombres de las entidades según la nomenclatura por defecto predeterminada por el framework. A continuación se describen algunas opciones para personalizar el proceso de Scaffolding</li>
                     </ul> 
                 </div>
                 
